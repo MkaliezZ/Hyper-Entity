@@ -1,0 +1,345 @@
+{
+  "protocol_version": "0.2-draft",
+  "bundle_id": "he.synthetic.sample-07",
+  "nature": "synthetic_example",
+  "scenario": {
+    "scenario_id": "he.sample.07",
+    "subjects": [
+      "synthetic sample-07"
+    ],
+    "problem": "downstream scope and evidence review",
+    "goal": "locate the original value under the recorded conditions",
+    "deliverables": [
+      "sample exchange fixture"
+    ],
+    "constraints": [
+      "synthetic data only"
+    ],
+    "acceptance_level": "draft_output",
+    "required_reviews": [],
+    "current_state": "validate",
+    "extensions": {}
+  },
+  "policy_packs": [
+    {
+      "policy_id": "inspection.sample.density",
+      "version": "1",
+      "status": "draft",
+      "adoption": "selected_for_task",
+      "maintainer": "fixture author",
+      "selection_basis": "Selected for this synthetic exchange only.",
+      "scope": {
+        "subjects": [
+          "one synthetic sample"
+        ],
+        "tasks": [
+          "check a reported density"
+        ],
+        "conditions": [
+          "same recorded method and sample"
+        ],
+        "exclusions": [
+          "batch inference",
+          "professional certification"
+        ]
+      },
+      "goals": [
+        "trace the sample to its recorded value"
+      ],
+      "priorities": [
+        "evidence and scope"
+      ],
+      "rules": [
+        {
+          "rule_id": "sample-record-match",
+          "kind": "hard_gate",
+          "when": "checking the sample result",
+          "requirement": "match subject, locator, method, conditions, number and unit to an available source record",
+          "rationale": "preserve the scope of the measurement",
+          "evidence_required": [
+            "versioned synthetic measurement record"
+          ],
+          "evaluation_method": "deterministic",
+          "positive_example": "same record, subject and conditions",
+          "counterexample": "a sample used to certify a batch",
+          "missing_behavior": "needs_evidence"
+        }
+      ],
+      "quality_dimensions": [
+        {
+          "dimension_id": "trace",
+          "criterion": "recover the source record"
+        }
+      ],
+      "preferences": [],
+      "decision_authority": {
+        "automated_scope": [
+          "synthetic mechanical checks"
+        ],
+        "reserved_decisions": [
+          "real attestation and batch conclusions"
+        ]
+      },
+      "revisions": [
+        "first synthetic test profile"
+      ],
+      "extensions": {}
+    }
+  ],
+  "capabilities": [],
+  "assets": [
+    {
+      "asset_id": "sample",
+      "version": "1",
+      "asset_type": "entity_snapshot",
+      "nature": "synthetic",
+      "source": "hyper-entity fixture author",
+      "locator": "inline:sample",
+      "sha256": "958e21fc1418be53b63761c85b7a01bb01a5df2edfe5eeec7347aae73c3a5913",
+      "subject_scope": "sample-07",
+      "usage_scope": "offline synthetic fixture",
+      "availability": "available",
+      "snapshot_at": "2026-11-20T10:00:00Z",
+      "derived_from": [],
+      "content": "{\"entity_id\":\"sample-07\",\"entity_type\":\"sample\",\"namespace\":\"synthetic-lab\",\"recorded_at\":\"2026-11-20T10:00:00Z\",\"registered_by\":\"synthetic-lab-reviewer\",\"version\":\"1\"}",
+      "extensions": {}
+    },
+    {
+      "asset_id": "claim-density",
+      "version": "1",
+      "asset_type": "claim_snapshot",
+      "nature": "synthetic",
+      "source": "hyper-entity fixture author",
+      "locator": "inline:claim-density",
+      "sha256": "e8be22df459fa7385cb004406b22bd8b6c422dd369f6787a312c117848bd8d16",
+      "subject_scope": "sample-07",
+      "usage_scope": "offline synthetic fixture",
+      "availability": "available",
+      "snapshot_at": "2026-11-20T10:00:00Z",
+      "derived_from": [
+        {
+          "asset_id": "raw-density",
+          "version": "1"
+        }
+      ],
+      "content": "{\"asserted_by\":\"synthetic-lab-reviewer\",\"claim_id\":\"density-07\",\"claim_kind\":\"fact\",\"evidence\":[{\"asset_ref\":{\"asset_id\":\"raw-density\",\"version\":\"1\"},\"locator\":{\"kind\":\"record_id\",\"value\":\"reading-07\"},\"relation\":\"supports\"}],\"namespace\":\"synthetic-lab\",\"origin_kind\":\"third_party_record\",\"predicate\":\"inspection.sample.density\",\"recorded_at\":\"2026-11-20T10:00:00Z\",\"scope\":{\"method_id\":\"demo-density\",\"method_version\":\"1\",\"temperature_c\":20},\"subject\":{\"entity_id\":\"sample-07\",\"namespace\":\"synthetic-lab\",\"version\":\"1\"},\"value\":{\"number\":1.04,\"unit\":\"g/cm³\"},\"version\":\"1\"}",
+      "extensions": {}
+    },
+    {
+      "asset_id": "raw-density",
+      "version": "1",
+      "asset_type": "inspection_record",
+      "nature": "synthetic",
+      "source": "hyper-entity fixture author",
+      "locator": "inline:raw-density",
+      "sha256": "66db0064874306be9d0861a4c9ef3b9766292b47d207c6da8c1aac7849950939",
+      "subject_scope": "sample-07",
+      "usage_scope": "offline synthetic fixture",
+      "availability": "available",
+      "snapshot_at": "2026-11-20T10:00:00Z",
+      "derived_from": [],
+      "content": "{\"method_id\":\"demo-density\",\"method_version\":\"1\",\"number\":1.04,\"record_id\":\"reading-07\",\"subject\":{\"entity_id\":\"sample-07\",\"namespace\":\"synthetic-lab\",\"version\":\"1\"},\"temperature_c\":20,\"unit\":\"g/cm³\"}",
+      "extensions": {}
+    }
+  ],
+  "decisions": [
+    {
+      "decision_id": "sample-d01",
+      "subject_refs": [
+        {
+          "asset_id": "claim-density",
+          "version": "1"
+        }
+      ],
+      "policy_refs": [
+        {
+          "id": "inspection.sample.density",
+          "version": "1"
+        }
+      ],
+      "judgment_status": "meets_conditions",
+      "scope": "synthetic sample at recorded conditions",
+      "rationale": "The historical sender judgment links the sample measurement to the original synthetic row.",
+      "evidence_refs": [
+        {
+          "asset_id": "raw-density",
+          "version": "1"
+        }
+      ],
+      "rule_checks": [
+        {
+          "rule_id": "sample-record-match",
+          "result": "met",
+          "evidence_refs": [
+            {
+              "asset_id": "raw-density",
+              "version": "1"
+            }
+          ],
+          "reason": "Sender snapshot matches the synthetic sample record."
+        }
+      ],
+      "reviews": {
+        "engineering": {
+          "status": "not_run",
+          "scope": null,
+          "evidence_refs": [],
+          "reviewer_kind": "not_recorded",
+          "reason": null
+        },
+        "domain": {
+          "status": "not_run",
+          "scope": null,
+          "evidence_refs": [],
+          "reviewer_kind": "not_recorded",
+          "reason": null
+        },
+        "aesthetic": {
+          "status": "not_run",
+          "scope": null,
+          "evidence_refs": [],
+          "reviewer_kind": "not_recorded",
+          "reason": null
+        },
+        "human_acceptance": {
+          "status": "not_run",
+          "scope": null,
+          "evidence_refs": [],
+          "reviewer_kind": "not_recorded",
+          "reason": null
+        },
+        "real_world": {
+          "status": "not_run",
+          "scope": null,
+          "evidence_refs": [],
+          "reviewer_kind": "not_recorded",
+          "reason": null
+        }
+      },
+      "unknowns": [
+        "real-world suitability"
+      ],
+      "next_actions": [
+        "Receiver rechecks the current request."
+      ],
+      "extensions": {
+        "hyper_entity": {
+          "purpose": "sample_result_review",
+          "decider": "synthetic-lab-reviewer",
+          "decided_at": "2026-11-20T10:00:00Z"
+        }
+      }
+    }
+  ],
+  "runs": [],
+  "delivery": {
+    "status": "in_progress",
+    "scope": "Offline receiver recomputes the answer. No live action is represented.",
+    "artifact_refs": [
+      {
+        "asset_id": "claim-density",
+        "version": "1"
+      }
+    ],
+    "decision_refs": [
+      "sample-d01"
+    ],
+    "blocking_gaps": [],
+    "remaining_items": [],
+    "claims": [],
+    "next_actions": [
+      "read requested fields if authorized"
+    ]
+  },
+  "extensions": {
+    "hyper_entity": {
+      "version": "0.2-draft",
+      "profile": {
+        "id": "inspection.sample.density",
+        "version": "1"
+      },
+      "entities": [
+        {
+          "namespace": "synthetic-lab",
+          "entity_id": "sample-07",
+          "version": "1",
+          "entity_type": "sample",
+          "registered_by": "synthetic-lab-reviewer",
+          "recorded_at": "2026-11-20T10:00:00Z"
+        }
+      ],
+      "claims": [
+        {
+          "namespace": "synthetic-lab",
+          "claim_id": "density-07",
+          "version": "1",
+          "subject": {
+            "namespace": "synthetic-lab",
+            "entity_id": "sample-07",
+            "version": "1"
+          },
+          "predicate": "inspection.sample.density",
+          "value": {
+            "number": 1.04,
+            "unit": "g/cm³"
+          },
+          "scope": {
+            "method_id": "demo-density",
+            "method_version": "1",
+            "temperature_c": 20
+          },
+          "claim_kind": "fact",
+          "origin_kind": "third_party_record",
+          "asserted_by": "synthetic-lab-reviewer",
+          "recorded_at": "2026-11-20T10:00:00Z",
+          "evidence": [
+            {
+              "asset_ref": {
+                "asset_id": "raw-density",
+                "version": "1"
+              },
+              "locator": {
+                "kind": "record_id",
+                "value": "reading-07"
+              },
+              "relation": "supports"
+            }
+          ]
+        }
+      ],
+      "snapshot_bindings": [
+        {
+          "kind": "entity",
+          "ref": {
+            "namespace": "synthetic-lab",
+            "entity_id": "sample-07",
+            "version": "1"
+          },
+          "asset_ref": {
+            "asset_id": "sample",
+            "version": "1"
+          }
+        },
+        {
+          "kind": "claim",
+          "ref": {
+            "namespace": "synthetic-lab",
+            "claim_id": "density-07",
+            "version": "1"
+          },
+          "asset_ref": {
+            "asset_id": "claim-density",
+            "version": "1"
+          }
+        }
+      ],
+      "grant_refs": [
+        {
+          "namespace": "synthetic-lab",
+          "grant_id": "partner-read",
+          "version": "1"
+        }
+      ]
+    }
+  }
+}

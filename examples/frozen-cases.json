@@ -1,0 +1,316 @@
+[
+  {
+    "id": "sample_read",
+    "replace": {},
+    "expected": {
+      "judgment": "meets_conditions",
+      "authorization": "granted",
+      "execution": "read",
+      "reason": "verified_sample_record",
+      "view": {
+        "value": {
+          "number": 1.04,
+          "unit": "g/cm³"
+        }
+      }
+    }
+  },
+  {
+    "id": "projection_exact",
+    "replace": {
+      "request/fields": [
+        "scope"
+      ]
+    },
+    "expected": {
+      "judgment": "meets_conditions",
+      "authorization": "granted",
+      "execution": "read",
+      "reason": "verified_sample_record",
+      "view": {
+        "scope": {
+          "method_id": "demo-density",
+          "method_version": "1",
+          "temperature_c": 20
+        }
+      }
+    }
+  },
+  {
+    "id": "batch_requires_sampling",
+    "replace": {
+      "request/scope": "batch"
+    },
+    "expected": {
+      "judgment": "needs_evidence",
+      "authorization": "granted",
+      "execution": "blocked",
+      "reason": "sampling_basis_missing",
+      "view": null
+    }
+  },
+  {
+    "id": "read_does_not_disclose",
+    "replace": {
+      "request/action": "disclose"
+    },
+    "expected": {
+      "judgment": "meets_conditions",
+      "authorization": "denied",
+      "execution": "blocked",
+      "reason": "action_not_granted",
+      "view": null
+    }
+  },
+  {
+    "id": "revoked",
+    "replace": {
+      "host/grants/0/status": "revoked"
+    },
+    "expected": {
+      "judgment": "meets_conditions",
+      "authorization": "denied",
+      "execution": "blocked",
+      "reason": "revoked",
+      "view": null
+    }
+  },
+  {
+    "id": "expiry_exact",
+    "replace": {
+      "host/now": "2026-11-22T08:00:00+08:00"
+    },
+    "expected": {
+      "judgment": "meets_conditions",
+      "authorization": "denied",
+      "execution": "blocked",
+      "reason": "outside_grant_window",
+      "view": null
+    }
+  },
+  {
+    "id": "before_start",
+    "replace": {
+      "host/now": "2026-11-19T23:59:59Z"
+    },
+    "expected": {
+      "judgment": "meets_conditions",
+      "authorization": "denied",
+      "execution": "blocked",
+      "reason": "outside_grant_window",
+      "view": null
+    }
+  },
+  {
+    "id": "start_exact",
+    "replace": {
+      "host/now": "2026-11-20T00:00:00Z"
+    },
+    "expected": {
+      "judgment": "meets_conditions",
+      "authorization": "granted",
+      "execution": "read",
+      "reason": "verified_sample_record",
+      "view": {
+        "value": {
+          "number": 1.04,
+          "unit": "g/cm³"
+        }
+      }
+    }
+  },
+  {
+    "id": "registry_unavailable",
+    "replace": {
+      "host/registry_status": "unavailable"
+    },
+    "expected": {
+      "judgment": "meets_conditions",
+      "authorization": "unknown",
+      "execution": "blocked",
+      "reason": "registry_unavailable",
+      "view": null
+    }
+  },
+  {
+    "id": "grant_state_unknown",
+    "replace": {
+      "host/grants/0/status": "unknown"
+    },
+    "expected": {
+      "judgment": "meets_conditions",
+      "authorization": "unknown",
+      "execution": "blocked",
+      "reason": "grant_state_unknown",
+      "view": null
+    }
+  },
+  {
+    "id": "grant_absent",
+    "replace": {
+      "host/grants": []
+    },
+    "expected": {
+      "judgment": "meets_conditions",
+      "authorization": "unknown",
+      "execution": "blocked",
+      "reason": "grant_state_unknown",
+      "view": null
+    }
+  },
+  {
+    "id": "source_unavailable",
+    "replace": {
+      "bundle/assets/2/availability": "deleted"
+    },
+    "expected": {
+      "judgment": "needs_evidence",
+      "authorization": "granted",
+      "execution": "blocked",
+      "reason": "evidence_unavailable",
+      "view": null
+    }
+  },
+  {
+    "id": "wrong_recipient",
+    "replace": {
+      "request/destination": "elsewhere"
+    },
+    "expected": {
+      "judgment": "meets_conditions",
+      "authorization": "denied",
+      "execution": "blocked",
+      "reason": "purpose_or_destination_mismatch",
+      "view": null
+    }
+  },
+  {
+    "id": "different_principal",
+    "replace": {
+      "host/principal": "another-partner"
+    },
+    "expected": {
+      "judgment": "meets_conditions",
+      "authorization": "denied",
+      "execution": "blocked",
+      "reason": "principal_or_issuer_mismatch",
+      "view": null
+    }
+  },
+  {
+    "id": "out_of_scope_field",
+    "replace": {
+      "request/fields": [
+        "evidence"
+      ]
+    },
+    "expected": {
+      "judgment": "meets_conditions",
+      "authorization": "denied",
+      "execution": "blocked",
+      "reason": "resource_or_field_mismatch",
+      "view": null
+    }
+  },
+  {
+    "id": "purpose_not_covered",
+    "replace": {
+      "request/purpose": "recruitment"
+    },
+    "expected": {
+      "judgment": "needs_review",
+      "authorization": "denied",
+      "execution": "blocked",
+      "reason": "purpose_or_destination_mismatch",
+      "view": null
+    }
+  },
+  {
+    "id": "act_outside_receiver",
+    "replace": {
+      "request/action": "act",
+      "host/grants/0/grant/actions": [
+        "act"
+      ]
+    },
+    "expected": {
+      "judgment": "meets_conditions",
+      "authorization": "granted",
+      "execution": "blocked",
+      "reason": "action_outside_receiver_profile",
+      "view": null
+    }
+  },
+  {
+    "id": "empty_claim",
+    "replace": {
+      "bundle/extensions/hyper_entity/claims/0": {}
+    },
+    "expected": {
+      "contract_error": "INVALID_SAMPLEEXTENSION"
+    }
+  },
+  {
+    "id": "dangling_binding_asset",
+    "replace": {
+      "bundle/extensions/hyper_entity/snapshot_bindings/1/asset_ref/asset_id": "absent"
+    },
+    "expected": {
+      "contract_error": "REFERENCE_UNRESOLVED"
+    }
+  },
+  {
+    "id": "dangling_claim_evidence",
+    "replace": {
+      "bundle/extensions/hyper_entity/claims/0/evidence/0/asset_ref/asset_id": "absent"
+    },
+    "expected": {
+      "contract_error": "REFERENCE_UNRESOLVED"
+    }
+  },
+  {
+    "id": "dangling_entity",
+    "replace": {
+      "bundle/extensions/hyper_entity/claims/0/subject/entity_id": "absent"
+    },
+    "expected": {
+      "contract_error": "ENTITY_UNRESOLVED"
+    }
+  },
+  {
+    "id": "wrong_claim_version",
+    "replace": {
+      "request/claim_ref/version": "2"
+    },
+    "expected": {
+      "contract_error": "CLAIM_UNRESOLVED"
+    }
+  },
+  {
+    "id": "snapshot_binding_mismatch",
+    "replace": {
+      "bundle/extensions/hyper_entity/claims/0/scope/temperature_c": 30
+    },
+    "expected": {
+      "contract_error": "SNAPSHOT_MISMATCH"
+    }
+  },
+  {
+    "id": "digest_mismatch",
+    "replace": {
+      "bundle/assets/2/sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "expected": {
+      "contract_error": "CONTENT_DIGEST_MISMATCH"
+    }
+  },
+  {
+    "id": "missing_timezone",
+    "replace": {
+      "host/now": "2026-11-21T12:00:00"
+    },
+    "expected": {
+      "contract_error": "INVALID_HOST"
+    }
+  }
+]

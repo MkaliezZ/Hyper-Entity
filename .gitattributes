@@ -1,0 +1,5 @@
+* text=auto eol=lf
+# Frozen exchange inputs are hashed as bytes by the comparison harness.
+examples/*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
+interop/personal-record.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
+schemas/*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol

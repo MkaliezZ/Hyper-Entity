@@ -1,0 +1,30 @@
+{
+  "entity": {
+    "namespace": "synthetic-portfolio",
+    "entity_id": "person-01",
+    "entity_type": "person",
+    "version": "1",
+    "registered_by": "person-01",
+    "recorded_at": "2026-11-19T10:00:00Z"
+  },
+  "claim": {
+    "namespace": "synthetic-portfolio",
+    "claim_id": "course-role",
+    "version": "1",
+    "subject": {"namespace": "synthetic-portfolio", "entity_id": "person-01", "version": "1"},
+    "predicate": "education.project.role",
+    "value": "lead_designer",
+    "scope": {"project_id": "course-01"},
+    "claim_kind": "fact",
+    "origin_kind": "self_declared",
+    "asserted_by": "person-01",
+    "recorded_at": "2026-11-19T10:00:00Z",
+    "evidence": [
+      {
+        "asset_ref": {"asset_id": "personal-statement", "version": "1"},
+        "locator": {"kind": "paragraph", "value": "1"},
+        "relation": "supports"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "action": "read",
+  "claim_ref": {
+    "namespace": "synthetic-lab",
+    "claim_id": "density-07",
+    "version": "1"
+  },
+  "grant_ref": {
+    "namespace": "synthetic-lab",
+    "grant_id": "partner-read",
+    "version": "1"
+  },
+  "scope": "sample",
+  "purpose": "sample_result_review",
+  "destination": "local-review",
+  "fields": [
+    "value"
+  ]
+}

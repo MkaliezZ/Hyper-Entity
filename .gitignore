@@ -1,0 +1,8 @@
+# Local review archives contain source snapshots from related projects.
+/评审/
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.env
+.env.*
