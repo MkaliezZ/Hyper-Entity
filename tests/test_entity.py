@@ -4,6 +4,7 @@ import sys
 import unittest
 from copy import deepcopy
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from jsonschema import Draft202012Validator
 
@@ -59,6 +60,37 @@ class ReceiverTests(unittest.TestCase):
         with self.assertRaises(ContractError) as caught:
             check(bundle)
         self.assertEqual(caught.exception.code, "INVALID_SAMPLEEXTENSION")
+
+    def test_invalid_reference_in_extension_reports_its_field(self):
+        bundle = fixtures()["bundle"]
+        bundle["extensions"]["related/record"] = {"asset_id": [], "version": "1"}
+        with self.assertRaises(ContractError) as caught:
+            check(bundle)
+        self.assertEqual(caught.exception.code, "SCHEMA_INVALID")
+        self.assertEqual(caught.exception.path, "/extensions/related~1record/asset_id")
+
+    def test_load_rejects_duplicate_keys_and_nonfinite_numbers(self):
+        with TemporaryDirectory() as root:
+            path = Path(root) / "input.json"
+            for text in ('{"value":1,"value":2}', '{"value":NaN}',
+                         '{"value":Infinity}', '{"value":1e999}'):
+                with self.subTest(text=text):
+                    path.write_text(text, encoding="utf-8")
+                    with self.assertRaises(ValueError):
+                        load(path)
+
+    def test_ambiguous_source_record_cannot_support_a_read(self):
+        inputs = fixtures()
+        raw = inputs["bundle"]["assets"][2]
+        source = raw["content"]
+        raw["content"] = source.replace('"number":1.04', '"number":9,"number":1.04')
+        self.assertNotEqual(raw["content"], source)
+        raw["sha256"] = hashlib.sha256(raw["content"].encode()).hexdigest()
+        receipt = decide(**inputs)
+        self.assertEqual(receipt["judgment"], "needs_evidence")
+        self.assertEqual(receipt["execution"], "blocked")
+        self.assertEqual(receipt["reason"], "unusable_source_record")
+        self.assertIsNone(receipt["view"])
 
     def test_personal_role_uses_core_records_only(self):
         packet = load(ROOT / "interop/personal-record.json")

@@ -2,6 +2,22 @@
 
 **v0.2-draft · 立项前验证**。Hyper Entity 让下游核查者沿一个对象的声明查回原始依据，判断它在哪些用途下成立，并按当前授权使用字段。[通用协议](<Hyper Entity 通用协议 v0.2-draft.md>)保留个人、产品等对象的共同结构。[首轮验证方案](首轮验证方案.md)选择样品检测数据，比较 Entity 和现有报告接口在同一任务上的收益与代价。
 
+## 仓库结构
+
+| 位置 | 内容 |
+| --- | --- |
+| [通用协议](<Hyper Entity 通用协议 v0.2-draft.md>)及 [Schema](schemas/entity.schema.json) | 实体、声明、证据、授权与交换规则。Schema 的默认入口校验样品密度领域。 |
+| [参考接收端](tools/entity.py) | 核对快照与证据，按独立宿主提供的当前授权执行一次本地字段读取。 |
+| [合成样例](examples)及 [测试](tests) | 完整交换包、宿主和请求夹具、判断与权限用例。 |
+| [互操作检查](interop) | Node.js 读回、个人角色字段样例、可选的 Hyper Report 基线。 |
+| [Hyper Protocol 固定版本](tools/upstream/NOTICE.txt) | 上位 Schema、校验器及来源和许可。 |
+
+## Hyper 生态中的位置
+
+在个人 Entity 中，项目角色和贡献绑定作品、分工或版本记录等依据。MBTI 可由本人自愿填写，并保留本人描述的来源。产品与机构的声明由各自的领域规则决定证据和确认权限。
+
+生态接入的设计方向是由官网选购专业服务，Hyper Bot 承接任务与成果，领域工作台保管原件并执行专业流程。Hyper Entity 保存可按权复用的身份、声明和证据引用。跨主体任务拟通过 **Hyper Protocol A2A** 交换任务包与回执，由 **Hyper Passport** 核验每次行动的授权范围和当前状态。当前参考程序覆盖本地样品读取，跨宿主签发、生产权限与产品接入另按其集成条件验收。
+
 ## 运行样例
 
 从仓库根目录执行。参考接收端需要 Python 3.11 或更高版本。先在你的 Python 环境中安装 [requirements.txt](requirements.txt) 中的依赖，之后的样例和测试可离线运行。
@@ -13,13 +29,13 @@ python -B tools/entity.py decide examples/sample-bundle.json --host examples/hos
 python -B -m unittest discover -s tests -v
 ```
 
-第一条检查上位任务包、Entity 扩展、引用和资产内容哈希。第二条核对样品 `sample-07` 和原始记录 `reading-07`，用宿主的当前状态决定这次读取。给定夹具的输出为：
+`check` 检查上位任务包、Entity 扩展、引用和资产内容哈希。`decide` 核对样品 `sample-07` 和原始记录 `reading-07`，用宿主的当前状态决定这次读取。给定夹具返回以下结果。
 
 ```json
 {"judgment":"meets_conditions","authorization":"granted","execution":"read","reason":"verified_sample_record","view":{"value":{"number":1.04,"unit":"g/cm³"}}}
 ```
 
-CLI 成功处理业务请求时退出码为 0，包括被拒绝和待补证的请求。调用方应读取 `execution` 与 `view`。输入违反契约时退出码为 1，文件读取或 JSON 解析失败时为 2。
+CLI 成功处理业务请求时退出码为 0，包括被拒绝和待补证的请求。调用方应读取 `execution` 与 `view`。输入违反契约时退出码为 1，文件读取或 JSON 解析失败时为 2。重复字段和非有限数值按解析错误处理。证据原件中的解析错误影响其支持的判断，接收端返回待补证。
 
 ## 核查哪些行为
 

@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import math
 import re
 import sys
 from datetime import datetime
@@ -36,8 +37,33 @@ class ContractError(ValueError):
         self.path = path
 
 
+def unique_json_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"Duplicate JSON field: {key!r}")
+        result[key] = value
+    return result
+
+
+def finite_json_number(text):
+    value = float(text)
+    if not math.isfinite(value):
+        raise ValueError("JSON numbers must be finite")
+    return value
+
+
+def parse_json(text):
+    return json.loads(
+        text,
+        object_pairs_hook=unique_json_object,
+        parse_float=finite_json_number,
+        parse_constant=finite_json_number,
+    )
+
+
 def load(path):
-    return json.loads(Path(path).read_text(encoding="utf-8"))
+    return parse_json(Path(path).read_text(encoding="utf-8"))
 
 
 @lru_cache
@@ -67,7 +93,25 @@ def record_ref(record, kind):
     return {key: record[key] for key in ("namespace", kind + "_id", "version")}
 
 
+def check_reference_types(value, path=""):
+    # The upstream validator resolves references inside open extensions as well
+    # as native fields. Check their types before they can be used as lookup keys.
+    if isinstance(value, dict):
+        if value.keys() == {"asset_id", "version"}:
+            for key in ("asset_id", "version"):
+                if not isinstance(value[key], str) or not value[key]:
+                    raise ContractError("SCHEMA_INVALID", f"{path}/{key}",
+                                        "Asset reference IDs and versions must be non-empty strings")
+        for key, child in value.items():
+            segment = key.replace("~", "~0").replace("/", "~1")
+            check_reference_types(child, f"{path}/{segment}")
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            check_reference_types(child, f"{path}/{index}")
+
+
 def check(bundle):
+    check_reference_types(bundle)
     upstream = validate_bundle(bundle, base_schema())
     if upstream:
         error = upstream[0]
@@ -88,7 +132,7 @@ def check(bundle):
         if asset["asset_type"] != kind + "_snapshot" or asset["availability"] != "available":
             raise ContractError("SNAPSHOT_UNAVAILABLE", "snapshot_bindings", kind)
         try:
-            snapshot = json.loads(asset["content"] or "")
+            snapshot = parse_json(asset["content"] or "")
         except ValueError:
             snapshot = None
         # JSON text comparison normalizes object ordering and distinguishes booleans from numbers.
@@ -129,7 +173,7 @@ def judgment(claim, assets, scope, purpose):
             missing_reasons.add("evidence_unavailable")
             continue
         try:
-            raw = json.loads(asset["content"])
+            raw = parse_json(asset["content"])
         except (TypeError, ValueError):
             raw = None
         if not isinstance(raw, dict) or asset["asset_type"] != "inspection_record":
